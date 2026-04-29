@@ -1,4 +1,6 @@
-package com.mycompany.practice;
+package com.mycompany.myproject;
+
+import javax.swing.JOptionPane;
 
 public class UserController {
 
@@ -6,19 +8,36 @@ public class UserController {
 
     public String register(User user) {
 
-        if (user.getUsername().isEmpty() || user.getPassword().isEmpty()
-                || user.getEmailAddress().isEmpty() || user.getContactNumber().isEmpty()) {
+        if (user.getUsername().isEmpty()
+                || user.getPassword().isEmpty()
+                || user.getEmailAddress().isEmpty()
+                || user.getContactNumber().isEmpty()) {
             return "Please fill up all fields!";
         }
-        
-        if(DATA_ACCESS_OBJECT.userExists(user.getUsername())){
-            return "Username already exist!";
+
+        if (DATA_ACCESS_OBJECT.userExists(user.getUsername())) {
+            return "User already exist!";
         }
-        
-        if(DATA_ACCESS_OBJECT.register(user)){
-           return "SUCCESS"; 
+
+        if (DATA_ACCESS_OBJECT.register(user)) {
+            return "SUCCESS";
         }
-        return "Error creating account!";
+
+        return "Error to create account";
     }
-    
+
+    public String login(User user) {
+        if (user.getUsername().isEmpty()) {
+            return "Username field is empty!";
+        }
+        if (user.getPassword().isEmpty()) {
+            return "Password field is empty!";
+        }
+        
+        if(DATA_ACCESS_OBJECT.login(user)){
+            return "SUCCESS";
+        }
+        
+        return "Failed to login!";
+    }
 }
