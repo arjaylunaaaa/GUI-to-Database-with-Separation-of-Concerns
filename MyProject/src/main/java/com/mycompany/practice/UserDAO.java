@@ -1,11 +1,10 @@
-package com.mycompany.practice;
+package com.mycompany.myproject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDAO {
@@ -19,14 +18,18 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
         return false;
     }
 
     public boolean register(User user) {
-        String sql = "INSERT INTO users(username, password, email_address, contact_number) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users("
+                + "username, "
+                + "password, "
+                + "email_address, "
+                + "contact_number) "
+                + "VALUES(?,?,?,?)";
 
         try (Connection connection = DBConnection.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -39,8 +42,30 @@ public class UserDAO {
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
         return false;
     }
+
+    public boolean login(User user) {
+
+        String sql = "SELECT * FROM users WHERE username = ?";
+
+        try (Connection connection = DBConnection.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String check = rs.getString("password");
+                String inputPassword = new String(user.getPassword());
+                if (BCrypt.checkpw(inputPassword, check)) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return false;
+    }
+
 }
