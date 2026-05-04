@@ -6,7 +6,8 @@ public class User {
     private String password;
     private String email_address;
     private String contact_number;
-    
+
+    // Constructor for signing up
     public User(String username, String password, String email_address, String contact_number) {
         
         this.username = username;
@@ -16,6 +17,7 @@ public class User {
         
     }
 
+    // Constructor for login
     public User(String username, String password){
 
         this.username = username;
